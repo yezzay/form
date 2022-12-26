@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Anonmessage</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+    <link rel="stylesheet" href="style.css">
+  </head>
+
+  <body>
+
+    <div class="card">
+      <h5 class="title">Send me a message!</h5>
+      <form name="submit-to-google-sheet">
+        <div class="field">
+          <input autocomplete="off" id="message" placeholder="Write Your Message Here!" class="input-field" name="message" type="text">
+        </div>
+        <button class="btn btn-send" type="submit">Send!</button>
+        <button class="btn btn-primary btn-loading d-none" type="button" disabled>
+          <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
+          Loading...
+        </button>
+      </form>
+      <br><br>
+      <div class="alert alert-warning alert-dismissible fade show d-none success" role="alert">
+        Your message has been sent successfully!
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
+    <script>
+      const scriptURL = 'https://script.google.com/macros/s/AKfycbycvs90LIek0PvU6ErKgfVzVAu00jp1RGTYZ8sy49VBwK7vA8rLVXXZttbaP5CEthkC/exec'
+      const form = document.forms['submit-to-google-sheet']
+      const btnSend = document.querySelector('.btn-send');
+      const btnLoad = document.querySelector('.btn-loading')
+      const alt = document.querySelector('.success')
+
+
+      form.addEventListener('submit', e => {
+        e.preventDefault()
+
+        // send 
+        btnLoad.classList.toggle('d-none');
+        btnSend.classList.toggle('d-none');
+
+        fetch(scriptURL, { method: 'POST', body: new FormData(form)})
+          .then(response => {
+            console.log('Success!', response)
+            btnLoad.classList.toggle('d-none');
+            btnSend.classList.toggle('d-none');
+            form.reset();
+            alt.classList.toggle('d-none');
+        })
+          .catch(error => console.error('Error!', error.message))
+      })
+    </script>
+</body>
+
+</html>
